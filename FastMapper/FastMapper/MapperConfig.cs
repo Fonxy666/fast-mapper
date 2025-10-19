@@ -1,19 +1,17 @@
-﻿using System.Linq.Expressions;
+﻿using FastMapper;
+using System.Linq.Expressions;
 
-namespace FastMapper;
-
-public class MapperConfig<TSource, TDestination>
+public sealed class MapperConfig<TSource, TDestination> : IMapperConfig
 {
-    private readonly HashSet<string> _ignoredProperties = new();
+    private readonly List<string> _ignoredProps = new();
 
     public MapperConfig<TSource, TDestination> Ignore<TProp>(Expression<Func<TDestination, TProp>> destProp)
     {
-        if (destProp.Body is MemberExpression member)
-        {
-            _ignoredProperties.Add(member.Member.Name);
-        }
+        var generatedProp = string.Join(".", destProp.Body.ToString().Split(".").Skip(1));
+        _ignoredProps.Add(generatedProp);
+
         return this;
     }
 
-    internal bool IsIgnored(string propName) => _ignoredProperties.Contains(propName);
+    public bool IsIgnored(string prop) => _ignoredProps.Any(p => p == prop);
 }
