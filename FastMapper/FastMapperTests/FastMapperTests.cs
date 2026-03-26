@@ -43,12 +43,14 @@ public class FastMapperTests
     [Fact]
     public void Should_Map_User_To_UserDto()
     {
-        var user = new User { Name = "Alice", Age = 25 };
+        var streets = new Streets { street1 = "aha", street2 = "hehe" };
+        var address = new Address { City = "KirchBichl", HouseNumber = 5, Streets = streets };
+        var user = new User { Name = "Alice", Age = 25, Address = address };
 
          var dto = Mapper<User, UserDto>.Map(user);
 
         Assert.Equal("Alice", dto.Name);
-        Assert.Equal(25, dto.Age);
+        Assert.Equal("aha", dto.Address.Streets.street1);
     }
 
     [Fact]
@@ -57,10 +59,13 @@ public class FastMapperTests
         var streets = new Streets { street1 = "aha", street2 = "hehe" };
         var address = new Address { City = "KirchBichl", HouseNumber = 5, Streets = streets };
         var user = new User { Name = "Alice", Age = 25, Address = address };
-        var mapConfig = new MapperConfig<User, UserDto>().Ignore(u => u.Address.Streets.street1).Ignore(u => u.Address.City);
+        var mapConfig = new MapperConfig<User, UserDto>()
+            .Ignore(u => u.Address.Streets.street1)
+            .Ignore(u => u.Address.City);
 
         var ignoredDto = Mapper<User, UserDto>.Map(user, mapConfig);
         var dto = Mapper<User, UserDto>.Map(user);
+
         Assert.Equal(string.Empty, ignoredDto.Address.City);
         Assert.Equal(string.Empty, ignoredDto.Address.Streets.street1);
     }

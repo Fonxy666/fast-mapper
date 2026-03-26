@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace FastMapper;
 
@@ -37,7 +36,6 @@ public static class Mapper<TSource, TDestination>
     {
         var parameter = Expression.Parameter(typeof(TSource), "src");
         var bindings =  new List<MemberBinding>();
-        var actualMemberInfo = new List<MemberInfo>();
 
         foreach (var destProp in typeof(TDestination).GetProperties())
         {
@@ -87,7 +85,3 @@ public static class Mapper<TSource, TDestination>
     }
 }
 
-public static class MapperLogger
-{
-    public static Action<string>? Log { get; set; }
-}
