@@ -1,9 +1,10 @@
-﻿using FastMapper;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+
+namespace FastMapper.Model;
 
 public sealed class MapperConfig<TSource, TDestination> : IMapperConfig
 {
-    private readonly List<string> _ignoredProps = new();
+    private readonly List<string> _ignoredProps = [];
 
     public MapperConfig<TSource, TDestination> Ignore<TProp>(Expression<Func<TDestination, TProp>> destProp)
     {
